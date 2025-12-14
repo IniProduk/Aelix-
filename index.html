@@ -1,139 +1,106 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Aelix Choux</title>
-  <link rel="stylesheet" href="style.css" />
-  <!-- Firebase v8 (compat) -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-  <!-- If you plan to use Firestore later, include firestore.js as well:
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-  -->
-  <style>
-    /* Minimal modal CSS (in case style.css belum punya) */
-    .modal { display:none; position:fixed; inset:0; z-index:1000; background:rgba(0,0,0,0.45); display:flex; justify-content:center; align-items:center; }
-    .modal-content { background:#fff; padding:20px; border-radius:10px; width:90%; max-width:420px; box-shadow:0 8px 30px rgba(0,0,0,0.12); position:relative; }
-    .modal-content input { width:100%; padding:8px 10px; border-radius:8px; border:1px solid #ddd; margin-bottom:8px; }
-    .close { position:absolute; right:12px; top:8px; cursor:pointer; font-size:20px; color:#666; }
-    #checkoutResult { margin-top:10px; color:#0F4C81; }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+<div class="app">
+
   <!-- HEADER -->
-  <header class="site-header">
+  <header class="header">
     <div class="header-left">
-      <img src="logo.png" class="logo" alt="logo">
+      <img src="logo.png" class="logo">
       <div>
-        <h1 class="brand-name">Aelix Choux</h1>
-        <p class="tagline">Renyah di luar, lembut di dalam</p>
+        <h1>Aelix Choux</h1>
+        <p>Renyah di luar, lembut di dalam</p>
       </div>
     </div>
-
-    <nav class="nav">
-      <a class="nav-link" href="#home">Home</a>
-      <a class="nav-link" href="#produk">Produk</a>
-      <a class="nav-link" href="#tentang">Tentang Kami</a>
-      <a class="nav-link" href="#kontak">Kontak</a>
-    </nav> 
-
-    <div class="header-right">
-      <a id="waHeaderBtn" class="btn-contact" href="https://wa.me/6288983587344">Kirim ulasan</a>
-    </div>
+    <a class="wa-btn" href="https://wa.me/6288983587344">WA</a>
   </header>
 
   <!-- HERO -->
-  <section class="container card hero" id="home">
-    <div class="hero-left">
-      <h2>Choux au raquelin</h2>
-      <p>Nikmati sensasi choux kekinian dengan isian krim lembut dan toping yang estetis. Dibuat dari bahan berkualitas, setiap gigitan menghadirkan rasa yang modern, fresh, dan elegan.</p>
-    </div>
-    
-  </section>
+  <section class="hero">
+    <img src="oreo.jpg" class="hero-img">
+    <h2>Aelix Choux</h2>
+    <p>Choux au craquelin premium dengan isian lembut dan rasa kekinian.</p>
 
-  <!-- PRODUK -->
-  <section class="container card" id="produk">
-    <h2 style="margin-bottom:14px; color:var(--blue)">Daftar Produk</h2>
-
-    <!-- product grid: static list from your data -->
-    <div class="products">
-
-      <div class="product-card">
-        <img src="oreo.jpg" alt="Coklat Oreo">
-        <h3>Coklat Oreo – 15K</h3>
-        <p class="muted">Choux dengan filling coklat creamy dan topping Oreo crunchy.</p>
-        <button class="btn-buy" data-name="Coklat Oreo" data-price="15000">Beli</button>
-      </div>
-
-      <div class="product-card">
-        <img src="redvelvet.jpg" alt="Redvelvet">
-        <h3>Redvelvet – 15K</h3>
-        <p class="muted">Rasa redvelvet lembut dengan sentuhan butter premium.</p>
-        <button class="btn-buy" data-name="Redvelvet" data-price="15000">Beli</button>
-      </div>
-
-      <div class="product-card">
-        <img src="original.jpg" alt="Original">
-        <h3>Original – 13K</h3>
-        <p class="muted">Nikmati rasa original choux yang lembut dengan taburan gula halus.</p>
-        <button class="btn-buy" data-name="Original" data-price="13000">Beli</button>
-      </div>
-
-      <div class="product-card">
-        <img src="choco.jpg" alt="Choco stone">
-        <h3>Choco stone – 15K</h3>
-        <p class="muted">Nikmati rasa coklat renyah berpadu dengan manisnya choux.</p>
-        <button class="btn-buy" data-name="Choco stone" data-price="15000">Beli</button>
-      </div>
-
+    <div class="hero-actions">
+      <a href="#produk" class="btn outline">Lihat Produk</a>
+      <button class="btn primary">Tambah ke Keranjang</button>
     </div>
   </section>
 
-  <!-- TENTANG -->
-  <section class="container card" id="tentang">
-    <h2 style="color:var(--blue)">Tentang Kami</h2>
-    <p>AELIX hadir sebagai merek dessert modern yang menawarkan premium choux pastry dengan isian krim beragam rasa kekinian seperti Original, Coklat Oreo, Choco Stone dan Red Velvet. Desain topping dan kemasan yang estetis membuat produk ini memiliki nilai cukup terjangkau dan sangat cocok untuk kebutuhan konsumsi personal, gifting, maupun event.</p>
-  </section>
-
-  <!-- KONTAK -->
-  <section class="container card" id="kontak">
-    <h2 style="color:var(--blue)">Kontak</h2>
-    <p>Klik untuk hubungi kami:</p>
-    <a id="waContact" class="btn-contact" href="https://wa.me/6288983587344">WhatsApp</a>
-  </section>
-
-  <!-- FOOTER -->
-  <footer style="text-align:center; padding:18px; color:var(--muted)">
-    © 2025 Aelix Choux — Semua hak dilindungi
-  </footer>
-
-  <!-- MODAL CHECKOUT -->
- <div id="checkoutModal" class="modal" style="display: none;">
-    <div class="modal-content" role="dialog" aria-modal="true">
-      <span id="closeCheckout" class="close">&times;</span>
-      <h3>Checkout Produk</h3>
-      <form id="checkoutForm">
-        <label>Produk</label>
-        <input type="text" id="coProduct" readonly>
-
-        <label>Jumlah</label>
-        <input type="number" id="coQty" value="1" min="1">
-
-        <label>Nama</label>
-        <input type="text" id="coName" placeholder="Nama Anda">
-
-        <label>Alamat</label>
-        <input type="text" id="coAddress" placeholder="Alamat pengiriman">
-
-        <button type="submit">Pesan Sekarang</button>
-      </form>
-      <div id="checkoutResult"></div>
+  <!-- POPULER -->
+  <section class="section">
+    <h3>Pilihan Populer</h3>
+    <div class="popular">
+      <div class="popular-card">
+        <img src="oreo.jpg">
+        <p>Coklat Oreo</p>
+        <span>Rp 15.000</span>
+      </div>
+      <div class="popular-card">
+        <img src="redvelvet.jpg">
+        <p>Red Velvet</p>
+        <span>Rp 15.000</span>
+      </div>
+      <div class="popular-card">
+        <img src="original.jpg">
+        <p>Original</p>
+        <span>Rp 13.000</span>
+      </div>
     </div>
-  </div>
+  </section>
 
-  <!-- main script -->
-  <script src="script.js"></script>
+  <!-- SEMUA PRODUK -->
+  <section class="section" id="produk">
+    <h3>Semua Produk</h3>
+
+    <div class="product-item">
+      <img src="oreo.jpg">
+      <div class="info">
+        <h4>Coklat Oreo</h4>
+        <p>Filling coklat creamy dan Oreo crunchy.</p>
+        <strong>Rp 15.000</strong>
+      </div>
+      <button class="qty-btn">+</button>
+    </div>
+
+    <div class="product-item">
+      <img src="redvelvet.jpg">
+      <div class="info">
+        <h4>Red Velvet</h4>
+        <p>Lembut dengan sentuhan butter premium.</p>
+        <strong>Rp 15.000</strong>
+      </div>
+      <button class="qty-btn">+</button>
+    </div>
+
+    <div class="product-item">
+      <img src="original.jpg">
+      <div class="info">
+        <h4>Original</h4>
+        <p>Rasa klasik choux lembut.</p>
+        <strong>Rp 13.000</strong>
+      </div>
+      <button class="qty-btn">+</button>
+    </div>
+  </section>
+
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <a class="active">Home</a>
+  <a>Produk</a>
+  <a>Keranjang</a>
+  <a>Checkout</a>
+  <a>Kontak</a>
+</nav>
+
 </body>
 </html>
