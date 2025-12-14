@@ -3,280 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aelix Choux - Premium Dessert</title>
+    <title>Aelix Choux - Premium Dessert (SPA)</title>
+    
+    <link rel="stylesheet" href="style.css"> 
+    
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
-
-        :root {
-            --blue: #0F4C81;
-            --red: #E63946;
-            --cream: #FDF1D2;
-            --text: #222;
-        }
-
-        * {
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        body {
-            margin: 0;
-            background: linear-gradient(180deg, var(--cream), #fff);
-            color: var(--text);
-            min-height: 100vh;
-        }
-
-        .app {
-            max-width: 420px;
-            margin: auto;
-            padding-bottom: 70px; /* Ruang untuk bottom-nav */
-        }
-
-        /* HEADER */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px;
-            position: sticky;
-            top: 0;
-            background: #fff;
-            box-shadow: 0 2px 4px rgba(0,0,0,.04);
-            z-index: 10;
-        }
-
-        .header-left {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .logo {
-            width: 42px;
-            height: 42px;
-            object-fit: contain;
-        }
-
-        .header h1 {
-            font-size: 16px;
-            margin: 0;
-            font-weight: 700;
-        }
-
-        .header p {
-            font-size: 11px;
-            margin: 0;
-            color: #666;
-        }
-
-        .wa-btn {
-            background: var(--red);
-            color: #fff;
-            padding: 8px 12px; /* Lebih besar dari sebelumnya */
-            border-radius: 8px;
-            text-decoration: none;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        /* HERO */
-        .hero {
-            text-align: center;
-            padding: 16px;
-        }
-
-        .hero-img {
-            width: 100%;
-            height: 200px; /* Diberi tinggi agar terlihat */
-            object-fit: cover;
-            border-radius: 14px;
-            box-shadow: 0 4px 10px rgba(0,0,0,.1);
-        }
-
-        .hero h2 {
-            color: var(--blue);
-            margin: 18px 0 4px;
-            font-size: 22px;
-            font-weight: 700;
-        }
-
-        .hero p {
-            font-size: 14px;
-            color: #444;
-        }
-
-        .hero-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .btn {
-            flex: 1;
-            padding: 12px;
-            border-radius: 10px;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
-            text-decoration: none;
-            text-align: center;
-        }
-
-        .btn.primary {
-            background: var(--red);
-            color: #fff;
-        }
-
-        .btn.outline {
-            border: 2px solid var(--blue);
-            color: var(--blue);
-            background: #fff;
-        }
-
-        /* SECTION */
-        .section {
-            padding: 16px;
-        }
-
-        .section h3 {
-            margin-bottom: 12px;
-            color: var(--blue);
-            font-size: 18px;
-            font-weight: 700;
-        }
-
-        /* POPULER */
-        .popular {
-            display: flex;
-            gap: 12px;
-            overflow-x: auto;
-            padding-bottom: 10px; /* Untuk estetika scroll */
-        }
-
-        .popular-card {
-            min-width: 140px;
-            background: #fff;
-            border-radius: 12px;
-            padding: 10px;
-            box-shadow: 0 4px 14px rgba(0,0,0,.08);
-            text-align: center;
-        }
-
-        .popular-card img {
-            width: 100%;
-            height: 100px; /* Fix tinggi gambar */
-            object-fit: cover;
-            border-radius: 8px;
-        }
-
-        .popular-card p {
-            margin: 6px 0 2px;
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        .popular-card span {
-            font-size: 13px;
-            color: var(--blue);
-            font-weight: 700;
-        }
-        
-        /* PRODUCT LIST */
-        .product-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            background: #fff;
-            padding: 12px;
-            border-radius: 12px;
-            margin-bottom: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,.06);
-        }
-
-        .product-item img {
-            width: 80px; /* Lebih besar */
-            height: 80px;
-            object-fit: cover;
-            border-radius: 10px;
-        }
-
-        .info { flex: 1; }
-        
-        .info h4 {
-            margin: 0;
-            font-size: 15px;
-            font-weight: 700;
-            color: var(--red);
-        }
-
-        .info p {
-            margin: 4px 0;
-            font-size: 12px;
-            color: #666;
-        }
-
-        .info strong {
-            color: var(--blue);
-            font-weight: 700;
-            font-size: 14px;
-        }
-
-        .qty-btn {
-            margin-left: auto;
-            background: var(--red);
-            color: #fff;
-            border: none;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        /* BOTTOM NAV */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            max-width: 420px;
-            width: 100%;
-            background: #fff;
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
-            box-shadow: 0 -4px 14px rgba(0,0,0,.1);
-            border-top-left-radius: 14px;
-            border-top-right-radius: 14px;
-            z-index: 50;
-        }
-
-        .bottom-nav a {
-            font-size: 11px;
-            color: #666;
-            text-decoration: none;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .bottom-nav svg {
-            width: 20px;
-            height: 20px;
-            fill: currentColor;
-        }
-
-        .bottom-nav .active {
-            color: var(--red);
-            font-weight: 600;
-        }
-        
-        /* Modals and forms are not included here for brevity, assume they are styled elsewhere */
-    </style>
 </head>
 <body>
 
@@ -291,192 +24,157 @@
             </div>
         </div>
         <a href="#" id="waHeaderBtn" class="wa-btn">
-            <svg style="margin-right: 4px; vertical-align: middle;" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8l-.25 1a2 2 0 0 0-.17 1l-1 1.7a2 2 0 0 1-1.15 1.15l-1.7 1a2 2 0 0 0-1 .17l-1 .25a8.38 8.38 0 0 1-3.8.9c-2.3 0-4.6-.7-6.2-2.3S3 14.5 3 12.2V12c0-2.3.7-4.6 2.3-6.2S9.7 3 12 3h.2c2.3 0 4.6.7 6.2 2.3S21 9.7 21 12z"></path><path d="M12 17V12l-1.5 2.5L9 12M14 12h-2m4 0h-2m-4 0h-2"></path></svg>
+             <svg style="margin-right: 4px; vertical-align: middle;" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8l-.25 1a2 2 0 0 0-.17 1l-1 1.7a2 2 0 0 1-1.15 1.15l-1.7 1a2 2 0 0 0-1 .17l-1 .25a8.38 8.38 0 0 1-3.8.9c-2.3 0-4.6-.7-6.2-2.3S3 14.5 3 12.2V12c0-2.3.7-4.6 2.3-6.2S9.7 3 12 3h.2c2.3 0 4.6.7 6.2 2.3S21 9.7 21 12z"></path><path d="M12 17V12l-1.5 2.5L9 12M14 12h-2m4 0h-2m-4 0h-2"></path></svg>
             WA
         </a>
     </header>
 
-    <section class="hero">
-        <img src="original.jpg" alt="Aelix Choux Hero" class="hero-img">
-        <h2>Aelix Choux</h2>
-        <p>Dessert Premium, Dibuat Segar Setiap Hari</p>
-        <div class="hero-actions">
-            <a href="#menu" class="btn outline">Lihat Menu</a>
-            <button class="btn primary" id="btnQuickAdd">Pesan Sekarang</button>
-        </div>
-    </section>
+    <main class="app-main">
 
-    <div class="section">
-        <h3>Menu Populer</h3>
-        <div class="popular" id="popular-container">
-            <div class="popular-card">
-                <img src="choco.jpg" alt="Choco Choux">
-                <p>Choco Choux</p>
-                <span>Rp 20.000</span>
-                <button class="qty-btn" data-name="Choco Choux" data-price="20000" data-id="choco">Beli</button>
-            </div>
-             <div class="popular-card">
-                <img src="oreo.jpg" alt="Oreo Choux">
-                <p>Oreo Choux</p>
-                <span>Rp 22.000</span>
-                 <button class="qty-btn" data-name="Oreo Choux" data-price="22000" data-id="oreo">Beli</button>
-            </div>
-        </div>
-    </div>
-    
-    <div class="section">
-        <h3>Semua Menu</h3>
-        <div id="product-list-container">
-            <div class="product-item">
-                <img src="redvelvet.jpg" alt="Red Velvet Choux">
-                <div class="info">
-                    <h4>Red Velvet Choux</h4>
-                    <p>Isian cream red velvet lembut.</p>
-                    <strong>Rp 25.000</strong>
+        <section id="home" class="page page-active">
+            <div class="hero">
+                <img src="original.jpg" alt="Aelix Choux Hero" class="hero-img">
+                <h2>Aelix Choux</h2>
+                <p>Dessert Premium, Dibuat Segar Setiap Hari</p>
+                <div class="hero-actions">
+                    <p style="margin-top: 20px; text-align: center;">
+    <a href="#status" id="lastOrderLink" style="font-size: 14px; color: var(--blue);">Lacak Pesanan Terakhir Anda</a>
+</p>
+                    <a href="#menu" class="btn outline">Lihat Menu</a>
+                    <button class="btn primary" id="btnQuickAdd">Pesan Sekarang</button>
                 </div>
-                <button class="qty-btn" data-name="Red Velvet Choux" data-price="25000" data-id="rv">+</button>
+            </div>
+
+            <div style="margin-top: 30px;">
+                <h3 class="section-title">Menu Populer</h3>
+                <div class="popular" id="popular-container"></div>
+            </div>
+
+            <div style="margin-top: 30px;">
+                <h3 class="section-title">Beberapa Menu Lain</h3>
+                <div id="product-list-container-home"></div>
+            </div>
+        </section>
+
+        <section id="menu" class="page">
+            <h3 class="section-title">Semua Menu Aelix Choux</h3>
+            <div id="product-list-container-all"></div>
+        </section>
+
+        <section id="keranjang" class="page">
+            <h3 class="section-title">Keranjang Anda</h3>
+            <div id="cart-list" style="min-height: 100px;">
+                 <p id="cart-empty-message" style="color: #888;">Keranjang kosong. Tambahkan produk dulu di halaman Menu.</p>
             </div>
             
-             <div class="product-item">
-                <img src="original.jpg" alt="Classic Choux">
-                <div class="info">
-                    <h4>Classic Choux</h4>
-                    <p>Choux lembut dengan cream vanilla premium.</p>
-                    <strong>Rp 18.000</strong>
-                </div>
-                <button class="qty-btn" data-name="Classic Choux" data-price="18000" data-id="classic">+</button>
+            <div class="cart-summary-footer" id="cart-footer" style="display:none;">
+                 <div class="cart-total-info">Total: <span id="cartTotal">Rp 0</span></div>
+                 <button id="btnGoToCheckout" class="btn primary">Checkout Sekarang</button>
             </div>
-        </div>
+        </section>
+        
+        <section id="checkout" class="page">
+            <h3 class="section-title">Konfirmasi Pesanan</h3>
+            <form id="checkoutForm">
+                <div id="checkout-summary-review">
+                    </div>
+                
+                <h4 style="font-size: 16px; margin-top: 20px; color: var(--red);">Data Penerima</h4>
+                <div class="form-row"><label>Nama Penerima</label><input type="text" id="buyerName" required placeholder="Nama lengkap"/></div>
+                <div class="form-row"><label>Nomor WA</label><input type="tel" id="buyerWa" required placeholder="08xx..."/></div>
+                
+                <div class="form-row"><label>Alamat Pengiriman (Deskripsi)</label><textarea id="buyerAddress" required placeholder="Jalan, Blok, Nomor Rumah/Apartemen"></textarea></div>
+                
+                <div class="form-row"><label>Catatan Tambahan (Opsional)</label><textarea id="buyerNote" placeholder="Contoh: jangan pedas, jam pengiriman"></textarea></div>
+
+                <div class="cart-summary-footer" style="border-top: none; margin-top: 0;">
+                    <div class="cart-total-info">Bayar: <span id="finalTotal">Rp 0</span></div>
+                    <button type="submit" class="pay-btn">Konfirmasi & Bayar (via WA)</button>
+                </div>
+                <p id="checkoutResult" style="font-size: 12px; color: green; margin-top: 10px;"></p>
+            </form>
+        </section>
+        
+        <section id="testimoni" class="page">
+            <h3 class="section-title">Ulasan Pelanggan</h3>
+            <div id="testimoni-list">
+                <div class="testi-card">
+                    <div class="testi-header">
+                        <div class="testi-profile">R</div>
+                        <div>
+                            <div style="font-weight: 700;">Rina S.</div>
+                            <div style="font-size: 12px; color: gold;">★★★★★</div>
+                        </div>
+                    </div>
+                    <p style="font-size: 14px;">"Choux nya lembut banget, isiannya melimpah dan tidak bikin enek. Selalu langganan yang Red Velvet!"</p>
+                    <img src="redvelvet.jpg" alt="Red Velvet Product" class="testi-product-img">
+                </div>
+                
+                 <div class="testi-card">
+                    <div class="testi-header">
+                        <div class="testi-profile">A</div>
+                        <div>
+                            <div style="font-weight: 700;">Andi P.</div>
+                            <div style="font-size: 12px; color: gold;">★★★★★</div>
+                        </div>
+                    </div>
+                    <p style="font-size: 14px;">"Pengiriman cepat, kemasan rapi. Yang Classic Choux isiannya juara!"</p>
+                    <img src="original.jpg" alt="Classic Product" class="testi-product-img">
+                </div>
+            </div>
+        </section>
+
+        <section id="kontak" class="page">
+            <h3 class="section-title">Kontak Kami</h3>
+            <div style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,.06);">
+                <p style="font-weight: 700; color: var(--red); font-size: 16px;">WhatsApp Admin</p>
+                <p style="font-size: 14px; color: #444; margin-top: 5px;">Admin siap melayani pesanan dan pertanyaan Anda.</p>
+                <a href="#" id="waContact" class="btn primary" style="margin-top: 15px; display: block;">Chat via WhatsApp</a>
+                
+                <h4 style="margin-top: 25px; font-size: 16px; color: var(--blue);">Jam Operasional</h4>
+                <p style="font-size: 14px; color: #444;">Senin - Sabtu: 09:00 - 18:00 WIB</p>
+                <p style="font-size: 12px; color: #666;">Pemesanan di luar jam operasional akan diproses keesokan harinya.</p>
+            </div>
+        </section>
+        <section id="status" class="page">
+    <h3 class="section-title">Lacak Pesanan Anda</h3>
+    <div id="status-display" style="min-height: 150px; background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,.06);">
+        <p style="color: #888; text-align: center; padding: 20px;">Memuat status pesanan...</p>
     </div>
-    
-    </div>
+</section>
 
-<nav class="bottom-nav">
-    <a href="#home" class="active">
-        <svg viewBox="0 0 24 24"><path d="M3 10.5L12 4l9 6.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V10.5z"></path></svg>
-        Home
-    </a>
-    <a href="#menu">
-        <svg viewBox="0 0 24 24"><path d="M3 3h18v4H3zM3 10h18v11H3z"></path></svg>
-        Menu
-    </a>
-    <a href="#keranjang">
-         <svg viewBox="0 0 24 24"><path d="M7 4h-2l-1 2h2l3.6 7.59-1.35 2.44C8.08 16.37 8 16.68 8 17a2 2 0 1 0 4 0 2 2 0 1 0 4 0c0-.32-.08-.63-.25-.89L17 13h3V9H6.21"></path></svg>
-        Keranjang
-    </a>
-    <a href="#kontak">
-        <svg viewBox="0 0 24 24"><path d="M21 8V7l-3 2-2-1-2 1 1 2-6 4-4-1-2 2v5h18z"></path></svg>
-        Kontak
-    </a>
-</nav>
+    </main>
 
-<script>
-    /* ====================== script.js (Cleaned & Minimal) ====================== */
+    <nav class="bottom-nav">
+        <a href="#home" class="active">
+            <svg viewBox="0 0 24 24"><path d="M3 10.5L12 4l9 6.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V10.5z"></path></svg>
+            Home
+        </a>
+        <a href="#menu">
+            <svg viewBox="0 0 24 24"><path d="M3 3h18v4H3zM3 10h18v11H3z"></path></svg>
+            Menu
+        </a>
+        <a href="#keranjang">
+             <svg viewBox="0 0 24 24"><path d="M7 4h-2l-1 2h2l3.6 7.59-1.35 2.44C8.08 16.37 8 16.68 8 17a2 2 0 1 0 4 0 2 2 0 1 0 4 0c0-.32-.08-.63-.25-.89L17 13h3V9H6.21"></path></svg>
+            Keranjang
+        </a>
+        <a href="#checkout">
+             <svg viewBox="0 0 24 24"><path d="M7 4h10v2H7zM4 8h16v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"></path></svg>
+            Checkout
+        </a>
+        <a href="#testimoni">
+            <svg viewBox="0 0 24 24"><path d="M21 6H3v10h9v5l9-5V6z"></path></svg>
+            Testimoni
+        </a>
+        <a href="#kontak">
+            <svg viewBox="0 0 24 24"><path d="M21 8V7l-3 2-2-1-2 1 1 2-6 4-4-1-2 2v5h18z"></path></svg>
+            Kontak
+        </a>
+    </nav>
 
-    /* === CONFIG === */
-    // Konfigurasi Firebase Anda yang lengkap (Disertakan di sini)
-    const firebaseConfig = {
-        apiKey: "AIzaSyB7PkK...(dll)", // ganti jika ada versi lengkap
-        authDomain: "choux-raka.firebaseapp.com",
-        databaseURL: "https://choux-raka-default-rtdb.asia-southeast1.firebasedatabase.app",
-        projectId: "choux-raka",
-        storageBucket: "choux-raka.appspot.com",
-        messagingSenderId: "441681098770",
-        appId: "1:441681098770:web:eb3a97513a13cd3fcc80cb"
-    };
+</div>
 
-    /* WA admin nomor (format internasional tanpa +) */
-    const WA_PHONE = "6288983587344";
+<script src="script.js"></script>
 
-    /* Helpers */
-    function formatRp(n) { if (!n && n !== 0) return ""; return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(n); }
-    const el = (q) => document.querySelector(q);
-    const els = (q) => document.querySelectorAll(q);
-
-    /* Initialize Firebase (compat v8) */
-    let rdb = null;
-    try {
-        firebase.initializeApp(firebaseConfig);
-        rdb = firebase.database();
-        console.log('Firebase initialized.');
-    } catch (e) {
-        console.warn('Firebase initialization failed (This is optional):', e);
-    }
-    
-    // Set WA links
-    const waHeaderBtn = el('#waHeaderBtn');
-    if (waHeaderBtn) waHeaderBtn.href = `https://wa.me/${WA_PHONE}`;
-    
-    // --- Mock Product Data (Jika Anda tidak pakai sistem Cart yang kompleks) ---
-    // Gunakan ini untuk demo Beli Cepat
-    const DEMO_PRODUCTS = [
-        { id: 'classic', name: 'Classic Choux', price: 18000, qty: 1 }
-    ];
-
-    // --- Event Listeners Sederhana ---
-    
-    // 1. Tombol Beli Cepat (Quick Add)
-    const btnQuickAdd = el('#btnQuickAdd');
-    if (btnQuickAdd) {
-        btnQuickAdd.addEventListener('click', (e) => {
-            e.preventDefault();
-            // Pilihan: Redirect ke WA dengan order default
-            const product = DEMO_PRODUCTS[0];
-            const name = "Pembeli"; // Anggap nama diisi di WA
-            const waMsg = `Halo Aelix Choux, saya ${encodeURIComponent(name)} ingin memesan ${product.qty} x ${encodeURIComponent(product.name)}. Total ${formatRp(product.price * product.qty)}.`;
-            const waUrl = `https://wa.me/${WA_PHONE}?text=${waMsg}`;
-            window.open(waUrl, '_blank');
-        });
-    }
-    
-    // 2. Tombol Beli (+) pada Produk (Simulasi Open Checkout / WA)
-    els('.qty-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const name = btn.dataset.name;
-            const price = btn.dataset.price;
-            
-            if (name && price) {
-                // Simulasi Checkout langsung via WA
-                const waMsg = `Halo Aelix Choux, saya ingin memesan 1 x ${encodeURIComponent(name)} (${formatRp(parseInt(price))}). Mohon konfirmasi pesanan saya.`;
-                const waUrl = `https://wa.me/${WA_PHONE}?text=${waMsg}`;
-                window.open(waUrl, '_blank');
-                alert(`Anda membeli: ${name} seharga ${formatRp(parseInt(price))}. Mengarahkan ke WA...`);
-            }
-            // Jika Anda ingin menggunakan sistem modal checkout Firebase:
-            // openCheckout(name, price); // Ini membutuhkan elemen Modal di HTML Anda
-        });
-    });
-
-    // 3. Navigasi Bawah
-    els('.bottom-nav a').forEach(a => {
-        a.addEventListener('click', () => {
-            // Update class active
-            els('.bottom-nav a').forEach(nav => nav.classList.remove('active'));
-            a.classList.add('active');
-            // Jika Anda menggunakan section/page, Anda perlu fungsi switch page di sini
-            const targetHash = a.getAttribute('href');
-            if (targetHash.startsWith('#')) {
-                // Scroll to top of the page for better feel
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-        });
-    });
-
-    // --- FIREBASE CHECKOUT LOGIC (Disederhanakan dari kode Anda) ---
-    // Karena HTML Modal Checkout tidak disertakan, fungsi ini tidak akan berjalan tanpa modal, 
-    // tapi saya pertahankan logika utamanya:
-    
-    /* submit order: save to RTDB and open WA chat */
-    // Note: Ini HANYA akan berfungsi jika Anda menambahkan elemen Checkout Modal ke HTML
-    
-    /*
-    if (el('#checkoutForm')) {
-        el('#checkoutForm').addEventListener('submit', async (ev) => {
-             // ... (Logika submit Firebase dan WA dari kode Anda)
-        });
-    }
-    */
-    
-</script>
 </body>
 </html>
