@@ -1,106 +1,638 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Aelix Choux</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Zr.Kitchen — Premium Brownies (Mobile)</title>
+  <meta name="description" content="Zr.Kitchen - Premium Homemade Brownies. Mobile-first web app."/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* =========================
+       THEME (mobile-first)
+       ========================= */
+    :root{
+      --bg: #070707;
+      --panel: #0f0f0f;
+      --gold: #D4AF37;
+      --muted: #bfb6a3;
+      --glass: rgba(255,215,110,0.06);
+      --radius: 14px;
+      --gap: 14px;
+      font-family: 'Poppins', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      color-scheme: dark;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background: linear-gradient(180deg, rgba(15,15,15,1) 0%, rgba(9,9,9,1) 100%);
+      color:#fff;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      font-size:16px;
+      line-height:1.3;
+    }
+
+    /* App container */
+    .app{
+      max-width:420px;
+      margin:0 auto;
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+    }
+
+    /* HEADER */
+    header.app-header{
+      padding:18px;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-bottom: 1px solid rgba(255,255,255,0.02);
+      position:sticky;
+      top:0;
+      z-index:40;
+      backdrop-filter: blur(6px);
+    }
+    .logo-wrap{width:48px;height:48px;border-radius:12px;background:var(--glass);display:flex;align-items:center;justify-content:center;overflow:hidden}
+    .logo-wrap img{width:100%;height:100%;object-fit:contain}
+    .brand{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+      flex:1;
+      min-width:0;
+    }
+    .brand .title{font-weight:700;color:var(--gold);font-size:18px;letter-spacing:0.2px}
+    .brand .subtitle{font-size:12px;color:var(--muted)}
+    .header-actions{display:flex;gap:10px;align-items:center}
+    .icon-btn{
+      width:42px;height:42px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.03);display:flex;align-items:center;justify-content:center;color:var(--gold)
+    }
+
+    /* MAIN */
+    main.app-main{flex:1;padding:16px;background:linear-gradient(180deg,transparent, rgba(0,0,0,0.02));}
+
+    /* HERO */
+    .hero{
+      border-radius:18px;
+      overflow:hidden;
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      padding:18px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      align-items:center;
+      text-align:center;
+      box-shadow: 0 6px 22px rgba(0,0,0,0.6);
+    }
+    .hero .hero-title{font-family:'Poppins';font-weight:700;font-size:22px;color:var(--gold);letter-spacing:0.6px}
+    .hero .hero-sub{font-size:13px;color:var(--muted)}
+    .hero .hero-image{width:100%;height:180px;border-radius:12px;overflow:hidden;background:#000;display:block}
+    .hero .hero-image img{width:100%;height:100%;object-fit:cover;display:block}
+    .hero .hero-ctas{display:flex;gap:10px;width:100%}
+    .btn{
+      flex:1;padding:12px;border-radius:12px;background:transparent;border:1px solid rgba(212,175,55,0.18);color:var(--gold);font-weight:600;text-align:center;
+      backdrop-filter: blur(6px);
+    }
+    .btn.primary{background:linear-gradient(90deg, rgba(212,175,55,0.12), rgba(212,175,55,0.06));box-shadow:0 6px 18px rgba(212,175,55,0.06)}
+
+    /* PRODUCTS */
+    .section-title{margin:18px 0 8px 2px;color:var(--muted);font-size:13px}
+    .products-list{display:grid;grid-template-columns: repeat(3, 1fr); gap:10px}
+    .product-card{
+      background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.01));
+      padding:10px;border-radius:12px;text-align:center;border:1px solid rgba(255,255,255,0.02);
+    }
+    .product-card img{width:100%;height:80px;object-fit:cover;border-radius:8px}
+    .product-name{font-weight:600;color:var(--gold);margin-top:8px;font-size:13px}
+    .product-price{font-weight:700;color:#fff;margin-top:6px;font-size:13px}
+    .product-star{color:var(--gold);font-size:12px;margin-top:6px}
+
+    /* LIST PRODUCTS (detailed) */
+    .list-products{display:flex;flex-direction:column;gap:12px;margin-top:12px}
+    .list-card{display:flex;gap:12px;align-items:center;padding:12px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));border:1px solid rgba(255,255,255,0.02)}
+    .list-card img{width:88px;height:88px;object-fit:cover;border-radius:10px}
+    .list-info{flex:1}
+    .list-info h4{margin:0;color:var(--gold);font-weight:700}
+    .list-info p{margin:6px 0 0 0;font-size:13px;color:var(--muted)}
+    .list-actions{display:flex;flex-direction:column;gap:8px;align-items:flex-end}
+    .small{font-size:13px;color:var(--muted)}
+
+    /* CART (sticky bottom row) */
+    .cart-summary{
+      position:fixed;left:50%;transform:translateX(-50%);bottom:74px;width:92%;max-width:420px;background:linear-gradient(180deg, rgba(0,0,0,0.5), rgba(0,0,0,0.4));padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);display:flex;justify-content:space-between;gap:12px;align-items:center;z-index:50;
+    }
+    .cart-summary .total{font-weight:700;color:var(--gold)}
+    .cart-summary .view-cart{background:var(--gold);color:#0b0b0b;padding:10px 12px;border-radius:10px;font-weight:700}
+
+    /* PAGES - hash nav */
+    .page{display:none}
+    .page.page-active{display:block}
+
+    /* CART PAGE */
+    .cart-list{display:flex;flex-direction:column;gap:12px}
+    .cart-item{display:flex;gap:12px;align-items:center;padding:12px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));border:1px solid rgba(255,255,255,0.02)}
+    .qty-control{display:flex;gap:6px;align-items:center}
+    .qty-btn{width:30px;height:30px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.03);display:flex;align-items:center;justify-content:center}
+
+    /* CHECKOUT */
+    .form-row{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+    input,textarea,select{background:transparent;border:1px solid rgba(255,255,255,0.04);padding:10px;border-radius:10px;color:#fff;font-size:14px}
+    textarea{min-height:90px;resize:vertical}
+    .pay-btn{background:var(--gold);color:#000;padding:14px;border-radius:12px;font-weight:700;border:none;width:100%}
+
+    /* FOOTER NAV */
+    nav.bottom-nav{position:fixed;left:50%;transform:translateX(-50%);bottom:12px;width:94%;max-width:420px;background:linear-gradient(180deg, rgba(0,0,0,0.6), rgba(0,0,0,0.4));padding:8px;border-radius:14px;display:flex;justify-content:space-between;align-items:center;z-index:60;border:1px solid rgba(255,255,255,0.03)}
+    .nav-item{display:flex;flex-direction:column;align-items:center;font-size:12px;color:var(--muted);gap:4px}
+    .nav-item.active{color:var(--gold)}
+    .nav-item svg{width:20px;height:20px;fill:currentColor}
+
+    /* small screens */
+    @media(min-width:720px){
+      main.app-main{padding:20px}
+    }
+  </style>
 </head>
 <body>
+  <div class="app" id="app">
 
-<div class="app">
+    <!-- HEADER -->
+    <header class="app-header">
+      <div class="logo-wrap">
+        <img src="zr kitchen logo.jpg" alt="ZR.Kitchen logo" id="brandLogo" />
+      </div>
+      <div class="brand">
+        <div class="title">Zr.Kitchen</div>
+        <div class="subtitle">Premium Homemade Brownies</div>
+      </div>
+      <div class="header-actions">
+        <a id="waHeaderBtn" class="icon-btn" href="#" target="_blank" title="Kontak WA">
+          <!-- whatsapp icon simple -->
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M...Z" fill="currentColor"/></svg>
+          WA
+        </a>
+      </div>
+    </header>
 
-  <!-- HEADER -->
-  <header class="header">
-    <div class="header-left">
-      <img src="logo.png" class="logo">
+    <!-- MAIN -->
+    <main class="app-main">
+
+      <!-- HOME PAGE -->
+      <section id="home" class="page page-active">
+        <div class="hero">
+          <div class="hero-title">Zr.Kitchen</div>
+          <div class="hero-sub">Premium Homemade Brownies</div>
+          <div class="hero-image">
+            <!-- hero image fallback -->
+            <img id="heroImg" src="logo.png" alt="Hero brownies">
+          </div>
+          <div class="hero-ctas">
+            <button class="btn" id="btnExplore">Lihat Produk</button>
+            <button class="btn primary" id="btnQuickAdd">Tambah ke Keranjang</button>
+          </div>
+        </div>
+
+        <div class="section-title">Pilihan Populer</div>
+        <div class="products-list" id="featuredList">
+          <!-- small product cards will be injected -->
+        </div>
+
+        <div class="section-title" style="margin-top:18px">Semua Produk</div>
+        <div class="list-products" id="product-list">
+          <!-- product list injected -->
+        </div>
+
+      </section>
+
+      <!-- PRODUK PAGE -->
+      <section id="produk" class="page">
+        <h3 style="margin:8px 0;color:var(--gold)">Menu</h3>
+        <div class="list-products" id="produk-list"></div>
+      </section>
+
+      <!-- KERANJANG PAGE -->
+      <section id="keranjang" class="page">
+        <h3 style="margin:8px 0;color:var(--gold)">Keranjangmu</h3>
+        <div id="cartEmpty" class="small" style="display:none">Keranjang kosong — tambahkan produk dulu.</div>
+        <div class="cart-list" id="cartList"></div>
+        <div style="margin-top:12px">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div class="small" style="color:var(--muted)">Total</div>
+            <div class="totalPrice" id="cartTotal">Rp 0</div>
+          </div>
+          <div style="height:10px"></div>
+          <button class="pay-btn" id="btnToCheckout">Checkout Sekarang</button>
+        </div>
+      </section>
+
+      <!-- CHECKOUT PAGE -->
+      <section id="checkout" class="page">
+        <h3 style="margin:8px 0;color:var(--gold)">Checkout</h3>
+        <form id="checkoutForm">
+          <div class="form-row"><label class="small">Nama Penerima</label><input id="buyerName" required placeholder="Nama lengkap"/></div>
+          <div class="form-row"><label class="small">Nomor WA</label><input id="buyerWa" placeholder="08xx..." required/></div>
+          <div class="form-row"><label class="small">Alamat / Kecamatan</label><input id="buyerAddress" placeholder="Contoh: Grafika Raya" required/></div>
+          <div class="form-row"><label class="small">Catatan (opsional)</label><textarea id="buyerNote" placeholder="Contoh: jangan digoyang, taruh di depan"></textarea></div>
+
+          <div style="margin:6px 0" class="small">Ringkasan Pesanan</div>
+          <div id="checkoutSummary" style="margin-bottom:12px"></div>
+
+          <button type="submit" class="pay-btn">Bayar & Konfirmasi (WA)</button>
+        </form>
+        <div id="checkoutResult" style="margin-top:12px;color:var(--muted)"></div>
+      </section>
+
+      <!-- TESTIMONI -->
+      <section id="testimoni" class="page">
+        <h3 style="margin:8px 0;color:var(--gold)">Testimoni</h3>
+        <div class="card" style="padding:12px">
+          <div style="display:flex;gap:12px;align-items:flex-start">
+            <div style="width:46px;height:46px;border-radius:10px;background:var(--glass)"></div>
+            <div>
+              <div style="font-weight:700">Rani</div>
+              <div class="small" style="margin-top:6px;color:var(--muted)">"Browniesnya legit dan tidak terlalu manis. Recomended!"</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ABOUT -->
+      <section id="tentang" class="page">
+        <h3 style="margin:8px 0;color:var(--gold)">Tentang Kami</h3>
+        <div class="card" style="padding:12px">
+          <p class="small" style="color:var(--muted);margin:0">Zr.Kitchen adalah bakery rumahan yang fokus pada brownies premium; bahan berkualitas, tanpa pengawet, dibuat segar setiap hari.</p>
+        </div>
+      </section>
+
+      <!-- CONTACT -->
+      <section id="kontak" class="page">
+        <h3 style="margin:8px 0;color:var(--gold)">Kontak</h3>
+        <div class="card" style="padding:12px;display:flex;flex-direction:column;gap:8px">
+          <div class="small">WhatsApp admin</div>
+          <a id="waContact" class="btn primary" href="#" target="_blank">Chat via WhatsApp</a>
+          <div class="small" style="margin-top:8px;color:var(--muted)">Jam operasional: 08:00 - 18:00</div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- bottom cart quick summary (hidden if cart empty) -->
+    <div id="cartSummaryBar" style="display:none" class="cart-summary">
       <div>
-        <h1>Aelix Choux</h1>
-        <p>Renyah di luar, lembut di dalam</p>
+        <div class="small">Keranjang</div>
+        <div class="total" id="miniTotal">Rp 0</div>
+      </div>
+      <div>
+        <button id="goCart" class="view-cart">Lihat Keranjang</button>
       </div>
     </div>
-    <a class="wa-btn" href="https://wa.me/6288983587344">WA</a>
-  </header>
 
-  <!-- HERO -->
-  <section class="hero">
-    <img src="oreo.jpg" class="hero-img">
-    <h2>Aelix Choux</h2>
-    <p>Choux au craquelin premium dengan isian lembut dan rasa kekinian.</p>
+    <!-- bottom navigation -->
+    <nav class="bottom-nav" role="navigation" aria-label="navigasi utama">
+      <div class="nav-item" data-hash="#home"><svg viewBox="0 0 24 24"><path d="M3 10.5L12 4l9 6.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V10.5z"></path></svg><div>Home</div></div>
+      <div class="nav-item" data-hash="#produk"><svg viewBox="0 0 24 24"><path d="M3 3h18v4H3zM3 10h18v11H3z"></path></svg><div>Produk</div></div>
+      <div class="nav-item" data-hash="#keranjang"><svg viewBox="0 0 24 24"><path d="M7 4h-2l-1 2h2l3.6 7.59-1.35 2.44C8.08 16.37 8 16.68 8 17a2 2 0 1 0 4 0 2 2 0 1 0 4 0c0-.32-.08-.63-.25-.89L17 13h3V9H6.21"></path></svg><div>Keranjang</div></div>
+      <div class="nav-item" data-hash="#checkout"><svg viewBox="0 0 24 24"><path d="M7 4h10v2H7zM4 8h16v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"></path></svg><div>Checkout</div></div>
+      <div class="nav-item" data-hash="#testimoni"><svg viewBox="0 0 24 24"><path d="M21 6H3v10h9v5l9-5V6z"></path></svg><div>Testimoni</div></div>
+      <div class="nav-item" data-hash="#kontak"><svg viewBox="0 0 24 24"><path d="M21 8V7l-3 2-2-1-2 1 1 2-6 4-4-1-2 2v5h18z"></path></svg><div>Kontak</div></div>
+    </nav>
 
-    <div class="hero-actions">
-      <a href="#produk" class="btn outline">Lihat Produk</a>
-      <button class="btn primary">Tambah ke Keranjang</button>
-    </div>
-  </section>
+  </div>
 
-  <!-- POPULER -->
-  <section class="section">
-    <h3>Pilihan Populer</h3>
-    <div class="popular">
-      <div class="popular-card">
-        <img src="oreo.jpg">
-        <p>Coklat Oreo</p>
-        <span>Rp 15.000</span>
-      </div>
-      <div class="popular-card">
-        <img src="redvelvet.jpg">
-        <p>Red Velvet</p>
-        <span>Rp 15.000</span>
-      </div>
-      <div class="popular-card">
-        <img src="original.jpg">
-        <p>Original</p>
-        <span>Rp 13.000</span>
-      </div>
-    </div>
-  </section>
+  <!-- Firebase (compat) - optional, enable if you want realtime DB saving -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <script>
+    /*************************************************************************
+     * ZR.Kitchen Mobile App (single file)
+     * - Mobile-first UI
+     * - Cart stored in localStorage
+     * - Optional Firebase Realtime DB on checkout
+     *
+     * How to use:
+     * - Put logo.png in same folder
+     * - (Optional) fill firebaseConfig below and enable Realtime DB in console
+     *************************************************************************/
 
-  <!-- SEMUA PRODUK -->
-  <section class="section" id="produk">
-    <h3>Semua Produk</h3>
+    // ======= PRODUCT DATA (fallback) =======
+    const PRODUCTS = [
+      {
+        id: 'orig',
+        name: 'Brownies Original',
+        price: 25000,
+        image: 'logo.png',
+        rating: 5,
+        description: 'Brownies klasik lembut, coklat pekat, tekstur fudgy.'
+      },
+      {
+        id: 'rv',
+        name: 'Brownies Red Velvet',
+        price: 30000,
+        image: 'logo.png',
+        rating: 5,
+        description: 'Red velvet gurih, topping cream cheese lembut.'
+      },
+      {
+        id: 'oreo',
+        name: 'Brownies Oreo Crunch',
+        price: 35000,
+        image: 'logo.png',
+        rating: 5,
+        description: 'Brownies dengan potongan Oreo crunchy dan crumble.'
+      }
+    ];
 
-    <div class="product-item">
-      <img src="oreo.jpg">
-      <div class="info">
-        <h4>Coklat Oreo</h4>
-        <p>Filling coklat creamy dan Oreo crunchy.</p>
-        <strong>Rp 15.000</strong>
-      </div>
-      <button class="qty-btn">+</button>
-    </div>
+    // ======= OPTIONAL FIREBASE CONFIG (REPLACE IF NEEDED) =======
+    // If you want checkout to store orders to Firebase Realtime DB,
+    // uncomment firebase.initializeApp(...) and fill firebaseConfig.
+    const firebaseConfig = {
+      apiKey: "", // <-- isi jika pakai firebase
+      authDomain: "",
+      databaseURL: "", // contoh: "https://your-project.firebaseio.com"
+      projectId: "",
+      storageBucket: "",
+      messagingSenderId: "",
+      appId: ""
+    };
+    let rdb = null;
+    function initFirebaseIfConfigured(){
+      try {
+        if (firebaseConfig.apiKey && firebaseConfig.databaseURL) {
+          firebase.initializeApp(firebaseConfig);
+          rdb = firebase.database();
+          console.log('Firebase inisialisasi aktif');
+        } else {
+          console.log('Firebase tidak dikonfigurasi (opsional)');
+        }
+      } catch(e) { console.warn('Firebase init error', e); }
+    }
+    initFirebaseIfConfigured();
 
-    <div class="product-item">
-      <img src="redvelvet.jpg">
-      <div class="info">
-        <h4>Red Velvet</h4>
-        <p>Lembut dengan sentuhan butter premium.</p>
-        <strong>Rp 15.000</strong>
-      </div>
-      <button class="qty-btn">+</button>
-    </div>
+    // ======= UTIL =======
+    function rupiah(n){ return 'Rp ' + (n).toLocaleString('id-ID'); }
+    function el(q, parent=document){ return parent.querySelector(q); }
+    function els(q, parent=document){ return [...parent.querySelectorAll(q)]; }
 
-    <div class="product-item">
-      <img src="original.jpg">
-      <div class="info">
-        <h4>Original</h4>
-        <p>Rasa klasik choux lembut.</p>
-        <strong>Rp 13.000</strong>
-      </div>
-      <button class="qty-btn">+</button>
-    </div>
-  </section>
+    // ======= RENDER PRODUCTS (home featured & list) =======
+    function renderFeatured(){
+      const fWrap = el('#featuredList');
+      fWrap.innerHTML = '';
+      PRODUCTS.forEach(p => {
+        const div = document.createElement('div');
+        div.className = 'product-card';
+        div.innerHTML = `
+          <img src="${p.image}" alt="${p.name}">
+          <div class="product-name">${p.name}</div>
+          <div class="product-star">${'★'.repeat(p.rating)}</div>
+          <div class="product-price">${rupiah(p.price)}</div>
+        `;
+        fWrap.appendChild(div);
+      });
+    }
 
-</div>
+    function renderListProducts(){
+      const wrap = el('#product-list');
+      const wrap2 = el('#produk-list');
+      wrap.innerHTML = '';
+      wrap2.innerHTML = '';
+      PRODUCTS.forEach(p => {
+        // home list small card (detailed)
+        const item = document.createElement('div');
+        item.className = 'list-card';
+        item.innerHTML = `
+          <img src="${p.image}" alt="${p.name}">
+          <div class="list-info">
+            <h4>${p.name}</h4>
+            <p class="small">${p.description}</p>
+            <div style="margin-top:8px;font-weight:700;color:var(--gold)">${rupiah(p.price)}</div>
+          </div>
+          <div class="list-actions">
+            <div class="small">Qty</div>
+            <div style="display:flex;gap:6px;align-items:center">
+              <button class="qty-btn" data-op="add" data-id="${p.id}" title="Tambah">+</button>
+            </div>
+          </div>
+        `;
+        wrap.appendChild(item);
 
-<!-- BOTTOM NAV -->
-<nav class="bottom-nav">
-  <a class="active">Home</a>
-  <a>Produk</a>
-  <a>Keranjang</a>
-  <a>Checkout</a>
-  <a>Kontak</a>
-</nav>
+        // produk page: full card with Add button
+        const card = document.createElement('div');
+        card.className = 'list-card';
+        card.innerHTML = `
+          <img src="${p.image}" alt="${p.name}">
+          <div class="list-info">
+            <h4>${p.name}</h4>
+            <p class="small">${p.description}</p>
+            <div style="margin-top:8px;font-weight:700;color:var(--gold)">${rupiah(p.price)}</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+            <button class="btn primary" data-add="${p.id}">Add</button>
+          </div>
+        `;
+        wrap2.appendChild(card);
+      });
+    }
 
+    // ======= CART (localStorage) =======
+    const CART_KEY = 'zr_cart_v1';
+    function getCart(){ try{ return JSON.parse(localStorage.getItem(CART_KEY) || '[]'); }catch(e){ return []; } }
+    function saveCart(c){ localStorage.setItem(CART_KEY, JSON.stringify(c)); updateCartUI(); }
+    function addToCart(productId, qty=1){
+      const p = PRODUCTS.find(x=>x.id===productId);
+      if(!p) return;
+      const cart = getCart();
+      const item = cart.find(i=>i.id===productId);
+      if(item) item.qty += qty; else cart.push({id:p.id,name:p.name,price:p.price,qty:qty,image:p.image});
+      saveCart(cart);
+    }
+    function setQty(productId, qty){
+      const cart = getCart();
+      const idx = cart.findIndex(i=>i.id===productId);
+      if(idx>=0){
+        if(qty<=0) cart.splice(idx,1); else cart[idx].qty = qty;
+        saveCart(cart);
+      }
+    }
+    function clearCart(){ localStorage.removeItem(CART_KEY); updateCartUI(); }
+
+    // render cart list
+    function renderCart(){
+      const wrap = el('#cartList');
+      const cart = getCart();
+      wrap.innerHTML = '';
+      if(cart.length===0){
+        el('#cartEmpty').style.display = 'block';
+        el('#cartTotal').innerText = rupiah(0);
+        el('#cartSummaryBar').style.display = 'none';
+        el('#cartSummaryBar').style.display = 'none'; // ensure hide
+        return;
+      } else el('#cartEmpty').style.display = 'none';
+
+      let total = 0;
+      cart.forEach(it=>{
+        total += it.price * it.qty;
+        const node = document.createElement('div');
+        node.className = 'cart-item';
+        node.innerHTML = `
+          <img src="${it.image}" style="width:72px;height:72px;border-radius:10px;object-fit:cover"/>
+          <div style="flex:1">
+            <div style="font-weight:700;color:var(--gold)">${it.name}</div>
+            <div class="small" style="margin-top:6px">${rupiah(it.price)} x ${it.qty}</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+            <div class="qty-control">
+              <button class="qty-btn" data-op="dec" data-id="${it.id}">-</button>
+              <div style="padding:0 8px">${it.qty}</div>
+              <button class="qty-btn" data-op="inc" data-id="${it.id}">+</button>
+            </div>
+            <button class="small" data-remove="${it.id}" style="background:transparent;border:none;color:var(--muted)">Hapus</button>
+          </div>
+        `;
+        wrap.appendChild(node);
+      });
+
+      el('#cartTotal').innerText = rupiah(total);
+      el('#miniTotal').innerText = rupiah(total);
+      el('#cartSummaryBar').style.display = 'flex';
+    }
+
+    function updateCartUI(){
+      renderCart();
+      // update nav count / other UI if needed
+    }
+
+    // quantity button handlers (delegation)
+    document.addEventListener('click', (e)=>{
+      const t = e.target;
+      if(t.matches('[data-add]')){ addToCart(t.dataset.add,1); updateCartUI(); showToast('Ditambahkan ke keranjang'); }
+      if(t.matches('.qty-btn') && t.dataset.op){
+        const op = t.dataset.op, id = t.dataset.id;
+        const cart = getCart();
+        const item = cart.find(i=>i.id===id);
+        if(!item) return;
+        if(op==='add' || op==='inc'){ setQty(id, item.qty+1); }
+        if(op==='dec'){ setQty(id, item.qty-1); }
+        updateCartUI();
+      }
+      if(t.matches('[data-remove]')){ setQty(t.dataset.remove, 0); updateCartUI(); }
+      if(t.id==='btnQuickAdd'){ // quick add first product for demo
+        addToCart(PRODUCTS[0].id,1); updateCartUI(); showToast('Ditambahkan!');
+      }
+      if(t.id==='btnExplore'){ location.hash='#produk'; }
+      if(t.id==='goCart'){ location.hash='#keranjang'; }
+      if(t.id==='btnToCheckout'){ location.hash='#checkout'; populateCheckoutSummary(); }
+    });
+
+    // simple toast
+    function showToast(msg='') {
+      const s = document.createElement('div');
+      s.style.position='fixed';s.style.left='50%';s.style.transform='translateX(-50%)';s.style.bottom='140px';
+      s.style.background='rgba(0,0,0,0.7)';s.style.padding='10px 14px';s.style.borderRadius='10px';s.style.color='#fff';s.style.zIndex=9999;
+      s.style.fontSize='14px';s.innerText = msg;
+      document.body.appendChild(s);
+      setTimeout(()=>s.remove(),1800);
+    }
+
+    // ======= CHECKOUT FORM handling (save to Firebase optional + WA) =======
+    el('#checkoutForm').addEventListener('submit', async (ev)=>{
+      ev.preventDefault();
+      const name = el('#buyerName').value.trim();
+      const wa = el('#buyerWa').value.trim();
+      const addr = el('#buyerAddress').value.trim();
+      const note = el('#buyerNote').value.trim();
+      const cart = getCart();
+      if(cart.length===0){ showToast('Keranjang kosong'); return; }
+
+      const orderId = 'order-' + Date.now().toString(36);
+      const order = {
+        id: orderId,
+        name, wa, addr, note,
+        items: cart,
+        total: cart.reduce((s,i)=>s + i.price * i.qty,0),
+        status: 'Menunggu konfirmasi',
+        createdAt: Date.now()
+      };
+
+      // save to firebase if configured
+      if(rdb){
+        try{
+          await rdb.ref('orders/' + orderId).set(order);
+          console.log('Order saved to rdb');
+        } catch(e){ console.warn('Firebase save failed', e); }
+      }
+
+      // prepare WhatsApp message (international formatting optional)
+      const phone = '6281226749965'; // <-- GANTI DENGAN NOMOR ADMIN tanpa + ( contoh: 62812...)
+      let msg = `Halo Zr.Kitchen, saya ${name} ingin memesan:%0A`;
+      order.items.forEach(it=> msg += `- ${it.name} x ${it.qty} (Rp ${it.price.toLocaleString('id-ID')})%0A`);
+      msg += `%0ATotal: Rp ${order.total.toLocaleString('id-ID')}%0AAlamat: ${addr}%0ACatatan: ${note}%0AID: ${orderId}`;
+      const waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
+      el('#checkoutResult').innerHTML = `Pesanan dibuat. ID: <strong>${orderId}</strong>. Mengarahkan ke WhatsApp...`;
+      clearCart();
+      // open WA in new tab
+      window.open(waUrl, '_blank');
+      // optionally redirect to order tracking page or show order id
+    });
+
+    // populate checkout summary
+    function populateCheckoutSummary(){
+      const wrap = el('#checkoutSummary');
+      const cart = getCart();
+      if(cart.length===0){ wrap.innerHTML = '<div class="small">Keranjang kosong</div>'; return; }
+      let html = '<div style="display:flex;flex-direction:column;gap:8px">';
+      cart.forEach(it=>{
+        html += `<div style="display:flex;justify-content:space-between"><div>${it.name} x ${it.qty}</div><div>${rupiah(it.price * it.qty)}</div></div>`;
+      });
+      html += `<hr style="border:none;border-top:1px solid rgba(255,255,255,0.04);margin:8px 0">`;
+      html += `<div style="display:flex;justify-content:space-between;font-weight:700;"><div>Total</div><div>${rupiah(cart.reduce((s,i)=>s + i.price * i.qty,0))}</div></div>`;
+      html += '</div>';
+      wrap.innerHTML = html;
+    }
+
+    // ======= NAV & INIT =======
+    function switchHash(hash){
+      document.querySelectorAll('.page').forEach(p=>p.classList.remove('page-active'));
+      const id = (hash || '#home').replace('#','');
+      const elPage = document.getElementById(id);
+      if(elPage) elPage.classList.add('page-active');
+      // update bottom nav active
+      document.querySelectorAll('.nav-item').forEach(it=>{
+        it.classList.toggle('active', it.dataset.hash === '#' + id);
+      });
+      // page-specific actions
+      if(id==='keranjang'){ updateCartUI(); }
+      if(id==='checkout'){ populateCheckoutSummary(); }
+    }
+    window.addEventListener('hashchange', ()=> switchHash(location.hash));
+    document.querySelectorAll('.nav-item').forEach(it=>{
+      it.addEventListener('click', ()=> {
+        location.hash = it.dataset.hash;
+      });
+    });
+
+    // hooks
+    el('#waHeaderBtn').addEventListener('click', ()=> {
+      // placeholder WA button; will be updated on init
+    });
+
+    function initApp(){
+      // render initial UI
+      renderFeatured();
+      renderListProducts();
+      updateCartUI();
+      // set WA link (admin)
+      const adminPhone = '6281226749965'; // replace with actual admin WA (no plus)
+      el('#waContact').href = `https://wa.me/${adminPhone}`;
+      el('#waHeaderBtn').href = `https://wa.me/${adminPhone}`;
+      // hero image - you can replace with real hero
+      el('#heroImg').src = PRODUCTS[0].image || 'logo.png';
+    }
+
+    initApp();
+
+  </script>
 </body>
 </html>
