@@ -3,7 +3,7 @@
 /* === CONFIG & HELPERS === */
 const WA_PHONE = "6288983587344"; // Ganti dengan nomor WA admin Anda
 const LS_KEY = 'aelix_cart_v1';
-const LS_ORDER_KEY = 'aelix_last_order_id'; // Kunci baru untuk menyimpan ID order terakhir
+const LS_ORDER_KEY = 'aelix_last_order_id';
 
 // Konfigurasi Firebase Anda
 const firebaseConfig = {
@@ -47,8 +47,8 @@ function getCart() {
 }
 function saveCart(c) {
     localStorage.setItem(LS_KEY, JSON.stringify(c));
-    renderCart(); // Render ulang keranjang setiap kali ada perubahan
-    updateCartButtons(); // Update tombol keranjang
+    renderCart();
+    updateCartButtons();
 }
 
 function addToCart(productId, qty = 1) {
@@ -59,10 +59,9 @@ function addToCart(productId, qty = 1) {
     if (item) {
         item.qty += qty;
     } else {
-        // Pastikan image dimasukkan ke item keranjang
         cart.push({ id: p.id, name: p.name, price: p.price, qty: qty, image: p.image });
     }
-    saveCart(cart.filter(i => i.qty > 0)); // Filter item dengan qty 0
+    saveCart(cart.filter(i => i.qty > 0));
     showToast(`${p.name} ditambahkan!`);
 }
 
@@ -86,7 +85,6 @@ function calculateTotal() {
 /* === RENDER LOGIC === */
 
 function renderProductCard(p, isPopular = false) {
-    // Dipastikan path image menggunakan p.image dari array PRODUCTS
     if (isPopular) {
         // Card Kecil untuk Popular (Home)
         return `
@@ -114,7 +112,6 @@ function renderProductCard(p, isPopular = false) {
 }
 
 function renderProducts() {
-    // Periksa apakah elemen ada sebelum diakses (untuk mencegah error rendering)
     const popularWrap = el('#popular-container');
     const homeListWrap = el('#product-list-container-home');
     const allListWrap = el('#product-list-container-all');
@@ -124,13 +121,11 @@ function renderProducts() {
     }
 
     if (homeListWrap) {
-        // Di Home hanya tampilkan 2 item list selain popular
         const otherProducts = PRODUCTS.filter(p => !p.isPopular).slice(0, 2);
         homeListWrap.innerHTML = otherProducts.map(p => renderProductCard(p, false)).join('');
     }
 
     if (allListWrap) {
-        // Di Menu tampilkan semua produk (list style)
         allListWrap.innerHTML = PRODUCTS.map(p => renderProductCard(p, false)).join('');
     }
 }
@@ -167,7 +162,6 @@ function renderCart() {
         `).join('');
     }
     if (totalEl) totalEl.innerText = formatRp(calculateTotal());
-    // Update checkout page summary jika sedang aktif
     if (location.hash === '#checkout') populateCheckoutForm();
 }
 
@@ -179,7 +173,7 @@ function populateCheckoutForm() {
     const finalTotalEl = el('#finalTotal');
     const checkoutFormEl = el('#checkoutForm');
 
-    if (!summaryEl || !checkoutFormEl) return; // Prevent error if not on checkout page
+    if (!summaryEl || !checkoutFormEl) return;
 
     if (cart.length === 0) {
         summaryEl.innerHTML = '<p style="color: var(--red); font-weight: 600;">Keranjang kosong. Tidak dapat melanjutkan checkout.</p>';
@@ -209,73 +203,95 @@ function populateCheckoutForm() {
     if (finalTotalEl) finalTotalEl.innerText = formatRp(calculateTotal());
 }
 
-el('#checkoutForm').addEventListener('submit', async (ev) => {
-    ev.preventDefault();
-    const name = el('#buyerName').value.trim();
-    const wa = el('#buyerWa').value.trim();
-    const addr = el('#buyerAddress').value.trim();
-    const note = el('#buyerNote').value.trim();
-    const cart = getCart();
-    const total = calculateTotal();
+if (el('#checkoutForm')) {
+    el('#checkoutForm').addEventListener('submit', async (ev) => {
+        ev.preventDefault();
+        const name = el('#buyerName').value.trim();
+        const wa = el('#buyerWa').value.trim();
+        const addr = el('#buyerAddress').value.trim();
+        const note = el('#buyerNote').value.trim();
+        const cart = getCart();
+        const total = calculateTotal();
 
-    // Validasi Dasar
-    if (cart.length === 0) { showToast('Keranjang kosong'); return; }
-    if (!name || !wa || !addr) { showToast('Harap lengkapi Nama, No. WA, dan Alamat!'); return; }
-
-
-    // *** MODIFIKASI UNTUK ORDER TRACKING ***
-
-    // 1. Generate Key Firebase unik (key ini akan jadi ID pesanan)
-    let orderId = 'ORD-' + Date.now().toString(36).toUpperCase();
-    let orderRef = null;
-
-    if (rdb) {
-        orderRef = rdb.ref('orders').push();
-        orderId = orderRef.key.substring(0, 8).toUpperCase(); // ID pendek untuk tampilan
-    }
+        if (cart.length === 0) { showToast('Keranjang kosong'); return; }
+        if (!name || !wa || !addr) { showToast('Harap lengkapi Nama, No. WA, dan Alamat!'); return; }
 
 
-    // 2. Prepare Data Order & Status Awal
-    const status = 'Menunggu Konfirmasi';
+        // *** MODIFIKASI UNTUK ORDER TRACKING ***
 
-    const orderToSave = {
-        orderId: orderId, // Menggunakan ID yang lebih pendek jika Firebase berhasil
-        name, wa, addr, note,
-        items: cart.map(i => ({ name: i.name, qty: i.qty, price: i.price, subtotal: i.price * i.qty })),
-        total: total,
-        status: status, // PENTING: Tambahkan status!
-        createdAt: Date.now()
-    };
+        let orderId = 'ORD-' + Date.now().toString(36).toUpperCase();
+        let orderRef = null;
 
-    // 3. Save to Firebase (Optional)
-    if (rdb && orderRef) {
-        try { await orderRef.set(orderToSave); } catch (e) { console.warn('Firebase save failed', e); }
-    }
-
-    // 4. Simpan ID ke Local Storage untuk Tracking
-    localStorage.setItem(LS_ORDER_KEY, orderId);
+        if (rdb) {
+            orderRef = rdb.ref('orders').push();
+            orderId = orderRef.key.substring(0, 8).toUpperCase();
+        }
 
 
-    // 5. Prepare WhatsApp message
-    let msg = `*PESANAN AELIX CHOUX*%0AID: ${orderId}%0A%0A`;
-    msg += `*Detail Pesanan:*%0A`;
-    orderToSave.items.forEach(it => msg += `- ${it.name} x ${it.qty} (${formatRp(it.subtotal)})%0A`);
-    msg += `%0A*Total Pembayaran:* ${formatRp(total)}%0A%0A`;
-    msg += `*Data Pengiriman:*%0ANama: ${name}%0ANo. WA: ${wa}%0AAlamat: ${addr}%0ACatatan: ${note || '-'}`;
+        // 2. Prepare Data Order & Status Awal
+        const status = 'Menunggu Konfirmasi';
 
-    const waUrl = `https://wa.me/${WA_PHONE}?text=${encodeURIComponent(msg)}`;
+        const orderToSave = {
+            orderId: orderId,
+            name, wa, addr, note,
+            items: cart.map(i => ({ name: i.name, qty: i.qty, price: i.price, subtotal: i.price * i.qty })),
+            total: total,
+            status: status,
+            createdAt: Date.now()
+        };
 
-    el('#checkoutResult').innerHTML = `Pesanan dibuat. ID: <strong>${orderId}</strong>. Harap konfirmasi di WhatsApp.`;
+        // 3. Save to Firebase (Optional)
+        if (rdb && orderRef) {
+            try { await orderRef.set(orderToSave); } catch (e) { console.warn('Firebase save failed', e); }
+        }
 
-    // 6. Clear cart and open WA, lalu alihkan ke halaman status
-    localStorage.removeItem(LS_KEY);
-    updateCartButtons();
-    window.open(waUrl, '_blank');
+        // 4. Simpan ID ke Local Storage untuk Tracking
+        localStorage.setItem(LS_ORDER_KEY, orderId);
 
-    // Alihkan ke halaman status dan render status terbaru
-    location.hash = '#status';
-    renderStatusPage();
-});
+
+        // Ganti seluruh bagian '5. Prepare WhatsApp message' (sekitar baris 263 hingga 295 di script.js)
+
+        // 5. Prepare WhatsApp message
+
+        // 5a. Rincian Pesanan (Menggunakan \n untuk Newline)
+        // Ini adalah ARRAY of strings.
+        const itemDetails = orderToSave.items.map(it =>
+            `- ${it.name} (${it.qty} pcs)`
+        ).join('\n'); // <-- Kunci: Gunakan \n (Newline)
+
+        // 5b. Menyusun Pesan Utama (Semua menggunakan \n)
+
+        let msg = 'PESANAN BARU AELIX CHOUX\n'; // \n
+
+        msg += '\n'; // Baris kosong
+        msg += '--- Rincian Pesanan ---\n';
+        msg += itemDetails; // itemDetails sudah dipisahkan dengan \n
+
+        msg += '\n'; // Baris kosong
+        msg += 'Total Pembayaran: ' + formatRp(total) + '\n';
+
+        msg += '\n'; // Baris kosong
+        msg += '--- Data Pengiriman ---\n';
+        msg += 'Atas Nama: ' + name + '\n';
+        msg += 'Nomor WA: ' + wa + '\n';
+        msg += 'Alamat: ' + addr + '\n';
+        msg += 'Catatan Tambahan: ' + (note || 'Tidak Ada Catatan');
+
+        // 5c. Encoding: Biarkan browser hanya meng-encode \n menjadi %0A satu kali.
+        const waUrl = `https://wa.me/${WA_PHONE}?text=${encodeURIComponent(msg)}`;
+
+        el('#checkoutResult').innerHTML = `Pesanan dibuat. ID: <strong>${orderId}</strong>. Harap konfirmasi di WhatsApp.`;
+
+        // 6. Clear cart and open WA, lalu alihkan ke halaman status
+        localStorage.removeItem(LS_KEY);
+        updateCartButtons();
+        window.open(waUrl, '_blank');
+
+        location.hash = '#status';
+        renderStatusPage();
+    });
+}
+
 
 // --- NAVIGATION & INIT ---
 
@@ -287,19 +303,17 @@ function switchPage(hash) {
 
     if (elPage) {
         elPage.classList.add('page-active');
-        window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll ke atas setiap pindah halaman
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Update Navigasi Bawah
     document.querySelectorAll('.bottom-nav a').forEach(nav => {
         nav.classList.toggle('active', nav.getAttribute('href') === hash);
     });
 
-    // Panggil fungsi render spesifik
     if (id === 'keranjang') renderCart();
     if (id === 'checkout') populateCheckoutForm();
     if (id === 'status') renderStatusPage();
-    if (id === 'testimoni') renderReviews(); // **<< PERBAIKAN DITAMBAHKAN DI SINI**
+    if (id === 'testimoni') renderReviews();
 }
 
 function updateCartButtons() {
@@ -310,7 +324,12 @@ function updateCartButtons() {
 document.addEventListener('click', (e) => {
     const t = e.target;
     // Tombol Add di Home/Menu
-    if (t.matches('[data-op="add"]')) { addToCart(t.dataset.id, 1); }
+    if (t.matches('.add-to-cart-btn') || t.matches('.add-to-cart-btn-full')) {
+        if (t.dataset.op === 'add') {
+            addToCart(t.dataset.id, 1);
+        }
+    }
+
     // Tombol Increment/Decrement di Keranjang
     if (t.matches('.qty-btn') && t.dataset.op) {
         const op = t.dataset.op, id = t.dataset.id;
@@ -344,28 +363,28 @@ function showToast(msg) {
 
 // Initial App Load
 function initApp() {
-    renderProducts(); // Render semua list produk awal (HARUS DIPANGGIL PERTAMA)
-    switchPage(location.hash || '#home'); // Atur halaman awal
-    updateCartButtons(); // Load cart data
+    renderProducts();
+    switchPage(location.hash || '#home');
+    updateCartButtons();
 }
 
 initApp();
 
 // =======================================================
-// FUNGSI BARU UNTUK ORDER TRACKING (DIJAGA PENEMPATANNYA)
+// FUNGSI BARU UNTUK ORDER TRACKING & ULASAN
 // =======================================================
 
 function renderStatusPage() {
     if (!rdb) return;
     const statusEl = el('#status-display');
-    const lastOrderId = localStorage.getItem(LS_ORDER_KEY); // LS_ORDER_KEY = ID pendek (ORD-XXX)
+    const lastOrderId = localStorage.getItem(LS_ORDER_KEY);
 
     if (!statusEl) return;
 
     if (!lastOrderId) {
         statusEl.innerHTML = `
-             <p style="text-align: center; color: #666; padding: 20px;">Anda belum melakukan pemesanan terakhir. Silakan pesan melalui menu 'Home' atau 'Menu'.</p>
-             <a href="#home" class="btn primary full" style="margin-top: 20px; text-decoration: none;">Mulai Pesan</a>
+            <p style="text-align: center; color: #666; padding: 20px;">Anda belum melakukan pemesanan terakhir. Silakan pesan melalui menu 'Home' atau 'Menu'.</p>
+            <a href="#home" class="btn primary full-width" style="margin-top: 20px; text-decoration: none;">Mulai Pesan</a>
         `;
         return;
     }
@@ -380,18 +399,14 @@ function renderStatusPage() {
         </p>
     `;
 
-    // Mencari pesanan di Firebase berdasarkan orderId pendek (lastOrderId)
-    // Menggunakan on('value') agar update otomatis (real-time)
     rdb.ref('orders').orderByChild('orderId').equalTo(lastOrderId).on('value', (snapshot) => {
         const orderData = snapshot.val();
 
         if (orderData) {
-            // Kita yakin hanya ada satu hasil yang cocok dengan orderId ini
             const orderKey = Object.keys(orderData)[0];
             const order = orderData[orderKey];
             const currentStatus = order.status || 'Status Tidak Diketahui';
 
-            // Tampilkan status di halaman
             el('#currentStatusCard').innerHTML = `
                 <div class="status-badge status-${currentStatus.toLowerCase().replace(/[^a-z0-9]/g, '')}">
                     ${currentStatus}
@@ -420,7 +435,6 @@ function getStatusMessage(status) {
             return 'Status pesanan saat ini tidak dapat diidentifikasi.';
     }
 }
-// --- FUNGSI UNTUK RATING BINTANG ---
 function renderStarRating(rating) {
     const fullStar = '★';
     const emptyStar = '☆';
@@ -432,7 +446,6 @@ function renderStarRating(rating) {
     return `<div class="rating-stars">${stars}</div>`;
 }
 
-// --- FUNGSI UNTUK MENGAMBIL DAN MERENDER ULASAN ---
 function renderReviews() {
     if (!rdb) return;
     const listEl = el('#testimoni-list');
@@ -440,18 +453,15 @@ function renderReviews() {
 
     listEl.innerHTML = '<p style="text-align: center; color: #888;">Memuat ulasan...</p>';
 
-    // Ambil semua ulasan, urutkan berdasarkan createdDate (terbaru di atas)
     rdb.ref('reviews').orderByChild('createdDate').on('value', (snapshot) => {
         const reviewsData = snapshot.val();
         listEl.innerHTML = '';
         const reviewsArray = [];
 
         if (reviewsData) {
-            // Ubah object menjadi array untuk diurutkan
             for (const key in reviewsData) {
                 reviewsArray.push(reviewsData[key]);
             }
-            // Urutkan dari yang terbaru (descending)
             reviewsArray.sort((a, b) => b.createdDate - a.createdDate);
 
             reviewsArray.forEach(review => {
@@ -478,7 +488,6 @@ function renderReviews() {
     });
 }
 
-// --- FUNGSI: EVENT LISTENER UNTUK SUBMIT FORM ULASAN ---
 const feedbackForm = el('#feedbackForm');
 if (feedbackForm) {
     feedbackForm.addEventListener('submit', function (e) {
@@ -506,17 +515,13 @@ if (feedbackForm) {
             createdDate: Date.now()
         };
 
-        // Simpan ke node 'reviews' di Firebase
         rdb.ref('reviews').push(newReview)
             .then(() => {
                 resultEl.innerHTML = '<span style="color: green;">Terima kasih! Ulasan Anda berhasil dikirim.</span>';
                 feedbackForm.reset();
-                // renderReviews akan otomatis update karena menggunakan on('value')
             })
             .catch(error => {
                 resultEl.innerHTML = `<span style="color: var(--red);">Gagal kirim: ${error.message}</span>`;
             });
     });
 }
-
-// **<<< BARIS INI (FUNGSI switchPage DUPLIKAT) SUDAH DIHAPUS DARI KODE ASLI ANDA >>>**
