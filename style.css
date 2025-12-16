@@ -5,6 +5,7 @@
     --red: #E63946;
     --cream: #FDF1D2;
     --text: #222;
+    --gold: #FFD700; /* Warna baru untuk bintang */
 }
 
 * {
@@ -15,10 +16,11 @@
 body {
     margin: 0;
     background: linear-gradient(180deg, var(--cream), #fff);
-    color: var(--text);
+    color: white ;
     min-height: 100vh;
 }
 
+/* KUNCI TAMPILAN HP ANDA: CLASS .app */
 .app {
     max-width: 420px;
     margin: auto;
@@ -35,7 +37,7 @@ body {
     padding: 12px;
     position: sticky;
     top: 0;
-    background: #fff;
+    background: #0F4C81;
     box-shadow: 0 2px 4px rgba(0,0,0,.04);
     z-index: 10;
 }
@@ -61,7 +63,7 @@ body {
 .header p {
     font-size: 11px;
     margin: 0;
-    color: #666;
+    color: #fff;
 }
 
 .wa-btn {
@@ -178,6 +180,7 @@ body {
         margin: 6px 0 2px;
         font-weight: 600;
         font-size: 14px;
+        color: #222
     }
 
     .popular-card span {
@@ -219,7 +222,10 @@ body {
     .info p {
         margin: 4px 0;
         font-size: 12px;
-        color: #666;
+        color: #333;
+        white-space: nowrap; 
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .info strong {
@@ -227,6 +233,52 @@ body {
         font-weight: 700;
         font-size: 14px;
     }
+/* --- PENAMBAHAN: STYLING UNTUK TOMBOL TAMBAH (+) DI DAFTAR PRODUK --- */
+
+/* Asumsi tombol tambah di daftar produk menggunakan class 'add-to-cart-btn' 
+   atau class lain yang Anda tetapkan di JavaScript Anda.
+   Jika Anda belum memiliki class, gunakan class ini di HTML/JS Anda: */
+/* --- PENAMBAHAN/PERBAIKAN: STYLING UNTUK TOMBOL TAMBAH (+) DI DAFTAR PRODUK --- */
+
+/* 1. Tombol '+' di list item (Product Item) - Tombol Kecil Bulat */
+.add-to-cart-btn {
+    /* RESET BACKGROUND yang mungkin rusak */
+    background: var(--red) !important;
+    background-image: none !important;
+    background-repeat: no-repeat !important;
+    color: #fff !important; /* Memastikan teks '+' berwarna putih */
+
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    /* Layout dan Font */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1;
+    /* PENTING: Agar flexbox tidak mengecilkan tombol */
+    flex-shrink: 0;
+    cursor: pointer;
+    border: none;
+}
+
+/* 2. Tombol '+' di popular card (yang full width) */
+.add-to-cart-btn-full {
+    background: var(--red);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    width: 100%;
+    padding: 8px;
+    border-radius: 8px;
+    margin-top: 8px;
+    /* PENTING: Hapus class 'qty-btn' dari elemen ini di JS, karena styling-nya rusak */
+    /* Pastikan juga tidak ada background image yang menempel */
+    background-image: none;
+}
 
 /* CART / CHECKOUT STYLES */
 .cart-item {
@@ -294,7 +346,7 @@ body {
         color: #444;
     }
 
-    .form-row input, .form-row textarea {
+    .form-row input, .form-row textarea, .form-row select { /* Menambahkan select untuk rating */
         width: 100%;
         padding: 10px;
         border: 1px solid #ccc;
@@ -318,43 +370,6 @@ body {
     color: #fff;
     border: none;
     cursor: pointer;
-}
-
-/* TESTIMONI */
-.testi-card {
-    background: #fff;
-    padding: 15px;
-    border-radius: 10px;
-    margin-bottom: 15px;
-    box-shadow: 0 1px 4px rgba(0,0,0,.05);
-}
-
-.testi-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
-}
-
-.testi-profile {
-    width: 40px;
-    height: 40px;
-    background: var(--cream);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 12px;
-    color: var(--blue);
-}
-
-.testi-product-img {
-    width: 80px;
-    height: 80px;
-    object-fit: cover;
-    border-radius: 8px;
-    margin-top: 10px;
 }
 
 /* BOTTOM NAV */
@@ -395,13 +410,15 @@ body {
         color: var(--red);
         font-weight: 600;
     }
-/* STATUS TRACKING STYLES (NEW) */
+
+/* --- ORDER TRACKING STYLES (DITAMBAHKAN) --- */
 .status-card {
     border-left: 5px solid var(--blue);
     padding: 15px;
     border-radius: 8px;
     margin-top: 10px;
-    background: var(--cream);
+    background: #fff; /* Diubah ke putih agar terlihat lebih clean */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
 .status-badge {
@@ -410,25 +427,89 @@ body {
     border-radius: 6px;
     font-weight: 700;
     font-size: 13px;
+    color: #fff;
 }
-
+/* Tambahan Status Live Tracking */
 .status-menunggukonfirmasi {
     background: #ffc107;
     color: #333;
 }
-/* Kuning */
+
 .status-sedangdibuat {
     background: #0d6efd;
-    color: #fff;
 }
-/* Biru */
+
 .status-siapdikirim {
     background: #198754;
-    color: #fff;
 }
-/* Hijau */
+
+.status-dalampengiriman {
+    background: #dc3545;
+}
+/* MERAH untuk pengiriman aktif */
 .status-selesai {
     background: #6c757d;
-    color: #fff;
 }
-/* Abu-abu */
+
+.full-width {
+    display: block !important;
+    width: 100%;
+    text-align: center;
+}
+
+/* --- FEEDBACK/ULASAN STYLES (DITAMBAHKAN) --- */
+.feedback-form-container {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.06);
+    margin-bottom: 20px;
+}
+
+.testi-card {
+    background: #fff;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.06);
+}
+
+.testi-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.testi-profile {
+    width: 40px;
+    height: 40px;
+    background: var(--cream);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--blue);
+    flex-shrink: 0;
+}
+
+.rating-stars {
+    color: var(--gold);
+    font-size: 16px;
+    letter-spacing: 2px;
+}
+
+.testi-card p {
+    font-size: 14px;
+    color: #444;
+}
+
+.testi-product-img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-top: 10px;
+}
