@@ -5,7 +5,7 @@
     --red: #E63946;
     --cream: #FDF1D2;
     --text: #222;
-    --gold: #FFD700; /* Warna baru untuk bintang */
+    --gold: #FFD700;
 }
 
 * {
@@ -16,7 +16,7 @@
 body {
     margin: 0;
     background: linear-gradient(180deg, var(--cream), #fff);
-    color: white ;
+    color: var(--text); /* Warna teks diubah ke --text agar mudah dibaca */
     min-height: 100vh;
 }
 
@@ -58,6 +58,7 @@ body {
     font-size: 16px;
     margin: 0;
     font-weight: 700;
+    color: #fff;
 }
 
 .header p {
@@ -79,17 +80,17 @@ body {
 /* MAIN & SPA NAVIGATION */
 .app-main {
     flex: 1;
-    padding-bottom: 70px; /* Ruang untuk bottom-nav */
+    padding-bottom: 70px;
 }
 
 .page {
-    display: none; /* Sembunyikan semua halaman secara default */
+    display: none;
     padding: 16px;
-    min-height: calc(100vh - 120px); /* Memastikan halaman cukup tinggi */
+    min-height: calc(100vh - 120px);
 }
 
 .page-active {
-    display: block; /* Tampilkan halaman yang aktif */
+    display: block;
 }
 
 /* HERO */
@@ -210,6 +211,7 @@ body {
 
 .info {
     flex: 1;
+    min-width: 0; /* KUNCI FIX: Memastikan Flexbox mengizinkan pemotongan teks */
 }
 
     .info h4 {
@@ -223,9 +225,9 @@ body {
         margin: 4px 0;
         font-size: 12px;
         color: #333;
-        white-space: nowrap; 
+        white-space: nowrap;
         overflow: hidden;
-        text-overflow: ellipsis;
+        text-overflow: ellipsis; /* KUNCI FIX: Memotong teks yang terlalu panjang */
     }
 
     .info strong {
@@ -233,21 +235,14 @@ body {
         font-weight: 700;
         font-size: 14px;
     }
-/* --- PENAMBAHAN: STYLING UNTUK TOMBOL TAMBAH (+) DI DAFTAR PRODUK --- */
 
-/* Asumsi tombol tambah di daftar produk menggunakan class 'add-to-cart-btn' 
-   atau class lain yang Anda tetapkan di JavaScript Anda.
-   Jika Anda belum memiliki class, gunakan class ini di HTML/JS Anda: */
-/* --- PENAMBAHAN/PERBAIKAN: STYLING UNTUK TOMBOL TAMBAH (+) DI DAFTAR PRODUK --- */
-
-/* 1. Tombol '+' di list item (Product Item) - Tombol Kecil Bulat */
+/* --- PERBAIKAN STYLING UNTUK TOMBOL TAMBAH (+) DI DAFTAR PRODUK --- */
 .add-to-cart-btn {
     /* RESET BACKGROUND yang mungkin rusak */
     background: var(--red) !important;
     background-image: none !important;
     background-repeat: no-repeat !important;
-    color: #fff !important; /* Memastikan teks '+' berwarna putih */
-
+    color: #fff !important;
     width: 35px;
     height: 35px;
     border-radius: 50%;
@@ -275,8 +270,6 @@ body {
     padding: 8px;
     border-radius: 8px;
     margin-top: 8px;
-    /* PENTING: Hapus class 'qty-btn' dari elemen ini di JS, karena styling-nya rusak */
-    /* Pastikan juga tidak ada background image yang menempel */
     background-image: none;
 }
 
@@ -346,7 +339,7 @@ body {
         color: #444;
     }
 
-    .form-row input, .form-row textarea, .form-row select { /* Menambahkan select untuk rating */
+    .form-row input, .form-row textarea, .form-row select {
         width: 100%;
         padding: 10px;
         border: 1px solid #ccc;
@@ -411,13 +404,13 @@ body {
         font-weight: 600;
     }
 
-/* --- ORDER TRACKING STYLES (DITAMBAHKAN) --- */
+/* --- ORDER TRACKING STYLES --- */
 .status-card {
     border-left: 5px solid var(--blue);
     padding: 15px;
     border-radius: 8px;
     margin-top: 10px;
-    background: #fff; /* Diubah ke putih agar terlihat lebih clean */
+    background: #fff;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
@@ -429,7 +422,7 @@ body {
     font-size: 13px;
     color: #fff;
 }
-/* Tambahan Status Live Tracking */
+
 .status-menunggukonfirmasi {
     background: #ffc107;
     color: #333;
@@ -446,7 +439,7 @@ body {
 .status-dalampengiriman {
     background: #dc3545;
 }
-/* MERAH untuk pengiriman aktif */
+
 .status-selesai {
     background: #6c757d;
 }
@@ -457,7 +450,7 @@ body {
     text-align: center;
 }
 
-/* --- FEEDBACK/ULASAN STYLES (DITAMBAHKAN) --- */
+/* --- FEEDBACK/ULASAN STYLES --- */
 .feedback-form-container {
     background: #fff;
     padding: 20px;
