@@ -34,12 +34,10 @@ const els = (q) => document.querySelectorAll(q);
 
 /* === PRODUCT DATA (Hanya untuk Demo Render) === */
 const PRODUCTS = [
-    { id: 'classic', name: 'Classic Choux', price: 18000, image: 'original.jpg', isPopular: true, description: 'Choux lembut dengan cream vanilla premium.' },
-    { id: 'choco', name: 'Choco Choux', price: 20000, image: 'choco.jpg', isPopular: true, description: 'Topping cokelat lumer yang menggoda.' },
-    { id: 'oreo', name: 'Oreo Choux', price: 22000, image: 'oreo.jpg', isPopular: true, description: 'Taburan oreo renyah di atas cream.' },
-    { id: 'rv', name: 'Red Velvet Choux', price: 25000, image: 'redvelvet.jpg', isPopular: false, description: 'Isian cream red velvet lembut dan mewah.' },
-    { id: 'matcha', name: 'Matcha Choux', price: 23000, image: 'matcha.jpg', isPopular: false, description: 'Aroma teh hijau Jepang yang khas.' },
-    { id: 'cheese', name: 'Cheese Choux', price: 21000, image: 'cheese.jpg', isPopular: false, description: 'Gurih manis dengan cream keju melimpah.' },
+    { id: 'original', name: 'Original Choux', price: 10000, image: 'original choux.jpg', isPopular: false, description: 'Choux lembut dengan cream vanilla premium.' },
+    { id: 'Tiramisu regal', name: 'Tiramisu regal choux', price: 14000, image: 'tiramisu regal.jpg', isPopular: true, description: 'Dengan isian tiramisu dan toping regal yang lembut dan renyah.' },
+    { id: 'Crunchy Oreo', name: 'Oreo Choux', price: 13000, image: 'oreo.jpg', isPopular: true, description: 'Taburan oreo renyah di atas cream.' },
+    { id: 'Rv', name: 'Red Velvet Choux', price: 13000, image: 'redvelvet.jpg', isPopular: true, description: 'Isian cream red velvet dengan toping oreo red velvet yang lembut dan mewah.' },
 ];
 
 /* === CART LOGIC (Menggunakan LocalStorage) === */
@@ -96,20 +94,20 @@ function renderProductCard(p, isPopular = false) {
                 <img src="${p.image}" alt="${p.name}">
                 <p>${p.name}</p>
                 <span>${formatRp(p.price)}</span>
-                <button class="qty-btn" style="width: 100%; border-radius: 8px; margin-top: 8px;" data-op="add" data-id="${p.id}">+</button>
+                <button class="add-to-cart-btn-full" data-op="add" data-id="${p.id}">+</button>
             </div>
         `;
     } else {
         // List Item Detail (Home/Menu)
         return `
-             <div class="product-item">
+            <div class="product-item">
                 <img src="${p.image}" alt="${p.name}">
                 <div class="info">
                     <h4>${p.name}</h4>
                     <p>${p.description}</p>
                     <strong>${formatRp(p.price)}</strong>
                 </div>
-                <button class="qty-btn" data-op="add" data-id="${p.id}">+</button>
+                <button class="add-to-cart-btn" data-op="add" data-id="${p.id}">+</button>
             </div>
         `;
     }
@@ -300,7 +298,8 @@ function switchPage(hash) {
     // Panggil fungsi render spesifik
     if (id === 'keranjang') renderCart();
     if (id === 'checkout') populateCheckoutForm();
-    if (id === 'status') renderStatusPage(); // Panggil fungsi render status
+    if (id === 'status') renderStatusPage();
+    if (id === 'testimoni') renderReviews(); // **<< PERBAIKAN DITAMBAHKAN DI SINI**
 }
 
 function updateCartButtons() {
@@ -353,10 +352,8 @@ function initApp() {
 initApp();
 
 // =======================================================
-// FUNGSI BARU UNTUK ORDER TRACKING (DITAMBAHKAN DI SINI)
+// FUNGSI BARU UNTUK ORDER TRACKING (DIJAGA PENEMPATANNYA)
 // =======================================================
-
-// GANTI SELURUH KODE FUNGSI INI DI script.js ANDA
 
 function renderStatusPage() {
     if (!rdb) return;
@@ -366,7 +363,10 @@ function renderStatusPage() {
     if (!statusEl) return;
 
     if (!lastOrderId) {
-        // ... (tampilan jika tidak ada ID) ...
+        statusEl.innerHTML = `
+             <p style="text-align: center; color: #666; padding: 20px;">Anda belum melakukan pemesanan terakhir. Silakan pesan melalui menu 'Home' atau 'Menu'.</p>
+             <a href="#home" class="btn primary full" style="margin-top: 20px; text-decoration: none;">Mulai Pesan</a>
+        `;
         return;
     }
 
@@ -419,4 +419,104 @@ function getStatusMessage(status) {
         default:
             return 'Status pesanan saat ini tidak dapat diidentifikasi.';
     }
-}   
+}
+// --- FUNGSI UNTUK RATING BINTANG ---
+function renderStarRating(rating) {
+    const fullStar = '★';
+    const emptyStar = '☆';
+    let stars = '';
+
+    for (let i = 1; i <= 5; i++) {
+        stars += (i <= rating) ? fullStar : emptyStar;
+    }
+    return `<div class="rating-stars">${stars}</div>`;
+}
+
+// --- FUNGSI UNTUK MENGAMBIL DAN MERENDER ULASAN ---
+function renderReviews() {
+    if (!rdb) return;
+    const listEl = el('#testimoni-list');
+    if (!listEl) return;
+
+    listEl.innerHTML = '<p style="text-align: center; color: #888;">Memuat ulasan...</p>';
+
+    // Ambil semua ulasan, urutkan berdasarkan createdDate (terbaru di atas)
+    rdb.ref('reviews').orderByChild('createdDate').on('value', (snapshot) => {
+        const reviewsData = snapshot.val();
+        listEl.innerHTML = '';
+        const reviewsArray = [];
+
+        if (reviewsData) {
+            // Ubah object menjadi array untuk diurutkan
+            for (const key in reviewsData) {
+                reviewsArray.push(reviewsData[key]);
+            }
+            // Urutkan dari yang terbaru (descending)
+            reviewsArray.sort((a, b) => b.createdDate - a.createdDate);
+
+            reviewsArray.forEach(review => {
+                const initial = review.name ? review.name[0].toUpperCase() : '?';
+
+                listEl.innerHTML += `
+                    <div class="testi-card">
+                        <div class="testi-header">
+                            <div class="testi-profile">${initial}</div>
+                            <div>
+                                <div style="font-weight: 700;">${review.name || 'Anonim'}</div>
+                                ${renderStarRating(review.rating)}
+                            </div>
+                        </div>
+                        <p style="font-size: 14px;">"${review.text}"</p>
+                    </div>
+                `;
+            });
+        }
+
+        if (reviewsArray.length === 0) {
+            listEl.innerHTML = '<p style="text-align: center; color: #888; padding: 20px;">Belum ada ulasan. Jadilah yang pertama!</p>';
+        }
+    });
+}
+
+// --- FUNGSI: EVENT LISTENER UNTUK SUBMIT FORM ULASAN ---
+const feedbackForm = el('#feedbackForm');
+if (feedbackForm) {
+    feedbackForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const name = el('#reviewerName').value.trim();
+        const rating = parseInt(el('#reviewRating').value);
+        const text = el('#reviewText').value.trim();
+        const resultEl = el('#feedbackResult');
+
+        if (!name || isNaN(rating) || rating < 1 || rating > 5 || !text) {
+            resultEl.innerHTML = '<span style="color: var(--red);">Mohon lengkapi semua kolom dengan benar.</span>';
+            return;
+        }
+
+        if (!rdb) {
+            resultEl.innerHTML = '<span style="color: var(--red);">Koneksi database bermasalah.</span>';
+            return;
+        }
+
+        const newReview = {
+            name: name,
+            rating: rating,
+            text: text,
+            createdDate: Date.now()
+        };
+
+        // Simpan ke node 'reviews' di Firebase
+        rdb.ref('reviews').push(newReview)
+            .then(() => {
+                resultEl.innerHTML = '<span style="color: green;">Terima kasih! Ulasan Anda berhasil dikirim.</span>';
+                feedbackForm.reset();
+                // renderReviews akan otomatis update karena menggunakan on('value')
+            })
+            .catch(error => {
+                resultEl.innerHTML = `<span style="color: var(--red);">Gagal kirim: ${error.message}</span>`;
+            });
+    });
+}
+
+// **<<< BARIS INI (FUNGSI switchPage DUPLIKAT) SUDAH DIHAPUS DARI KODE ASLI ANDA >>>**
