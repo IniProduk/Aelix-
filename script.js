@@ -36,8 +36,9 @@ const els = (q) => document.querySelectorAll(q);
 const PRODUCTS = [
     { id: 'original', name: 'Original Choux', price: 10000, image: 'original choux.jpg', isPopular: false, description: 'Choux lembut dengan cream vanilla premium.' },
     { id: 'Tiramisu regal', name: 'Tiramisu regal choux', price: 14000, image: 'tiramisu regal.jpg', isPopular: true, description: 'Dengan isian tiramisu dan toping regal yang lembut dan renyah.' },
-    { id: 'Crunchy Oreo', name: 'Oreo Choux', price: 13000, image: 'oreo.jpg', isPopular: true, description: 'Taburan oreo renyah di atas cream.' },
+    { id: 'Crunchy Oreo', name: 'Chocolate Oreo Crunchy', price: 13000, image: 'oreo.jpg', isPopular: true, description: 'Taburan oreo renyah di atas cream.' },
     { id: 'Rv', name: 'Red Velvet Choux', price: 13000, image: 'redvelvet.jpg', isPopular: true, description: 'Isian cream red velvet dengan toping oreo red velvet yang lembut dan mewah.' },
+    { id: 'Choco Stone', name: 'Choco Stone Choux', price: 13000, image: 'choco.jpg', isPopular: false, description: 'Isian coklat yang lumer dan taburan coklat yang crunchy.' },
 ];
 
 /* === CART LOGIC (Menggunakan LocalStorage) === */
